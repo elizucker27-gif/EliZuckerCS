@@ -34,6 +34,9 @@ public class Pong implements Runnable, KeyListener {
 
     public boolean firstCrash;
 
+    public boolean firstCrash2;
+
+
     // Main method
     public static void main(String[] args) {
         Pong ex = new Pong();
@@ -44,6 +47,7 @@ public class Pong implements Runnable, KeyListener {
     public Pong() {
         setUpGraphics();
         firstCrash = true;
+        firstCrash2 = true;
 
         // Create Lebron
         bron = new Lebron("Lebron.png", 300, 300);
@@ -52,6 +56,8 @@ public class Pong implements Runnable, KeyListener {
         // Create MJ
         mj = new MJ("MJ.png", 100, 100);
         mjImage = new ImageIcon("MJ.png").getImage();
+        mj.dx = 6;
+        mj.dy = 4;
 
         // ★ Create Kareem
         kareem = new Kareem("Kareem", 600, 400);
@@ -78,29 +84,40 @@ public class Pong implements Runnable, KeyListener {
         kareem.move(); // ★ NEW
 
         checkCrash();
+
     }
 
     public void checkCrash() {
+
+        // Lebron paddle collision
         if (bron.rect.intersects(mj.rect) && firstCrash == true) {
-
-            bron.dx = -bron.dx;
             mj.dx = -mj.dx;
-
-
             firstCrash = false;
-
-
         }
+
+        // bounce off top/bottom
         if (mj.ypos <= 0 || mj.ypos + mj.height >= HEIGHT) {
             mj.dy = -mj.dy;
         }
 
+        // reset lebron crash
         if (!bron.rect.intersects(mj.rect)) {
             firstCrash = true;
         }
-        if (!kareem.rect.intersects(mj.rect) && firstCrash == true) {
-            kareem.dx = -kareem.dx;
-            mj.dx = -mj.dx;}
+
+        // Kareem paddle collision
+        if (kareem.rect.intersects(mj.rect) && firstCrash2 == true) {
+            mj.dx = -mj.dx;
+            mj.xpos = kareem.xpos - mj.width;
+
+            firstCrash2 = false;
+        }
+
+        // reset kareem crash
+        if (!kareem.rect.intersects(mj.rect)) {
+            firstCrash2 = true;
+        }
+
     }
 
     private void render() {
