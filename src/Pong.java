@@ -94,16 +94,11 @@ public class Pong implements Runnable, KeyListener {
             mj.dx = -mj.dx;
             firstCrash = false;
         }
-
-        // bounce off top/bottom
-        if (mj.ypos <= 0 || mj.ypos + mj.height >= HEIGHT) {
-            mj.dy = -mj.dy;
-        }
-
         // reset lebron crash
         if (!bron.rect.intersects(mj.rect)) {
             firstCrash = true;
         }
+
 
         // Kareem paddle collision
         if (kareem.rect.intersects(mj.rect) && firstCrash2 == true) {
@@ -220,7 +215,7 @@ public class Pong implements Runnable, KeyListener {
         }
     }
 
-    @Override
+
     public void keyReleased(KeyEvent e) {
         System.out.println(e.getKeyCode());
         if (e.getKeyCode() == 38) { //up

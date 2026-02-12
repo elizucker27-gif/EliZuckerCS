@@ -32,7 +32,6 @@ public class MJ {
         ypos += dy;
         rect = new Rectangle(xpos, ypos, width, height);
         bounce();
-        wrap();
     }
 
     public void bounce() {
@@ -42,7 +41,7 @@ public class MJ {
             dx = -dx;
         }
 
-        if (ypos >= 700 - height) {
+        if (ypos >= 700 + height) {
             dy = -dy;
         }
 
