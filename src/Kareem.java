@@ -34,7 +34,7 @@ import java.awt.*;
             rect = new Rectangle(xpos, ypos, width, height);
 
             bounce();
-            wrap();
+
         }
 
         public void bounce() {

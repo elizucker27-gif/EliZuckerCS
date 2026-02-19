@@ -59,14 +59,18 @@ public class Pong implements Runnable, KeyListener {
         mj.dx = 6;
         mj.dy = 4;
 
-        // ★ Create Kareem
-        kareem = new Kareem("Kareem", 600, 400);
+
+        kareem = new Kareem("Kareem", 100, 100);
         kareemImage = new ImageIcon("Kareem.png").getImage();
 
         // Background
         bgImage = new ImageIcon("Space.jpeg").getImage();
 
         System.out.println("Setup complete, starting game...");
+
+
+
+
     }
 
     // Game loop
@@ -84,6 +88,7 @@ public class Pong implements Runnable, KeyListener {
         kareem.move(); // ★ NEW
 
         checkCrash();
+
 
     }
 
@@ -170,12 +175,12 @@ public class Pong implements Runnable, KeyListener {
         System.out.println("Graphics setup complete");
     }
 
-    @Override
+
     public void keyTyped(KeyEvent e) {
 
     }
 
-    @Override
+
     public void keyPressed(KeyEvent e) {
         System.out.println(e.getKeyCode());
         if (e.getKeyCode() == 38) {

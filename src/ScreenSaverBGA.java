@@ -27,6 +27,7 @@ public class ScreenSaverBGA implements Runnable {
     Image bgImage;
 
     boolean firstCrash;
+    boolean newCrash;
 
     public static void main(String[] args) {
         ScreenSaverBGA ex = new ScreenSaverBGA();
@@ -37,6 +38,7 @@ public class ScreenSaverBGA implements Runnable {
         setUpGraphics();
 
         firstCrash = true;
+        newCrash = true;
 
         bron = new Lebron("Lebron.png", 300, 300);
         mj = new MJ("MJ.png", 100, 100);
@@ -92,14 +94,22 @@ public class ScreenSaverBGA implements Runnable {
     //  CRASH METHOD
 
     public void crashMJKA() {
-        if (mj.rect.intersects(kareem.rect)) {
+        if (mj.rect.intersects(kareem.rect) && newCrash) {
 
-            if (Math.random() < 0.5) {
-                kareem.dx = -kareem.dx;
-            } else {
-                kareem.dy = -kareem.dy;
-            }
+//            if (Math.random() < 0.5) {
+//                kareem.dx = -kareem.dx;
+//            } else {
+            kareem.dy = -kareem.dy;
+            kareem.dx = -kareem.dx;
+            mj.dx = -mj.dx;
+            mj.dy = -mj.dy;
+//            }
         }
+        if (!mj.rect.intersects(kareem.rect)) {
+            newCrash = true;
+        }
+
+
     }
 
     private void render() {
