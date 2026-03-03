@@ -30,6 +30,7 @@ import javax.swing.ImageIcon;
         Image mjImage;
         Image kareemImage;
         Image bgImage;
+        Image hoopImage;
 
         boolean firstCrash;
         boolean newCrash;
@@ -52,6 +53,7 @@ import javax.swing.ImageIcon;
             bronImage = new ImageIcon("Lebron.png").getImage();
             mjImage = new ImageIcon("MJ.png").getImage();
             kareemImage = new ImageIcon("Kareem.png").getImage();
+            hoopImage = new ImageIcon("hoop.png").getImage();
 
             bgImage = new ImageIcon("Space.jpeg").getImage();
         }
@@ -108,6 +110,8 @@ import javax.swing.ImageIcon;
                 kareem.dx = -kareem.dx;
                 mj.dx = -mj.dx;
                 mj.dy = -mj.dy;
+
+                newCrash = false;
 //            }
             }
             if (!mj.rect.intersects(kareem.rect)) {
@@ -126,6 +130,10 @@ import javax.swing.ImageIcon;
             g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
             g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
             g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
+
+            int hoopWidth = 120;   // ⭐ NEW
+            int hoopHeight = 120;  // ⭐ NEW
+            g.drawImage(hoopImage, WIDTH - hoopWidth - 10, 10, hoopWidth, hoopHeight, null);
 
             g.dispose();
             bufferStrategy.show();
