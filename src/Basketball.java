@@ -57,7 +57,7 @@ import javax.swing.ImageIcon;
             kareemImage = new ImageIcon("Kareem.png").getImage();
             hoopImage = new ImageIcon("hoop.png").getImage();
 
-            bgImage = new ImageIcon("Space.jpeg").getImage();
+            bgImage = new ImageIcon("Space.png").getImage();
         }
 
         public void run() {
@@ -158,6 +158,9 @@ import javax.swing.ImageIcon;
             canvas = new Canvas();
             canvas.setBounds(0, 0, WIDTH, HEIGHT);
             canvas.setIgnoreRepaint(true);
+            canvas.addKeyListener(this);
+            canvas.setFocusable(true);
+            canvas.requestFocus();
             panel.add(canvas);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -173,25 +176,34 @@ import javax.swing.ImageIcon;
         public void keyTyped(KeyEvent e) {
 
         }
+
         @Override
         public void keyPressed(KeyEvent e) {
             System.out.println(e.getKeyCode());
-            if (e.getKeyCode()==38){
+            if (e.getKeyCode() == 38) {
                 bron.dy = -10;
             }
-            if (e.getKeyCode()==40){
-                bron.dy =10;
+            if (e.getKeyCode() == 40) {
+                bron.dy = 10;
+            }
+            if (e.getKeyCode() == 37) {
+                bron.dx = -10;
+            }
+            if (e.getKeyCode() == 39) {
+                bron.dx = 10;
             }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            if (e.getKeyCode()==38) {
+            if (e.getKeyCode() == 38 || e.getKeyCode() == 40) {
                 bron.dy = 0;
             }
-            if (e.getKeyCode()==40) {
-                bron.dy = 0;
+
+            if (e.getKeyCode() == 37 || e.getKeyCode() == 39) {
+                bron.dx = 0;
             }
         }
     }
+
 
