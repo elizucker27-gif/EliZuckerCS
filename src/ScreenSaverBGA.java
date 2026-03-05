@@ -1,12 +1,14 @@
 import java.awt.Canvas;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
-public class ScreenSaverBGA implements Runnable {
+public class ScreenSaverBGA implements Runnable, KeyListener {
 
     final int WIDTH = 1000;
     final int HEIGHT = 700;
@@ -41,6 +43,8 @@ public class ScreenSaverBGA implements Runnable {
         newCrash = true;
 
         bron = new Lebron("Lebron.png", 300, 300);
+        bron.dx = 0;
+        bron.dy = 0;
         mj = new MJ("MJ.png", 100, 100);
         kareem = new Kareem("Kareem.png", 600, 400);
 
@@ -151,6 +155,34 @@ public class ScreenSaverBGA implements Runnable {
         frame.setVisible(true);
 
         canvas.createBufferStrategy(2);
+        canvas.addKeyListener(this);
+        canvas.setFocusable(true);
+        canvas.requestFocus();
         bufferStrategy = canvas.getBufferStrategy();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println(e.getKeyCode());
+    if (e.getKeyCode()==38){
+        bron.dy = -10;
+    }
+    if (e.getKeyCode()==40){
+        bron.dy =10;
+    }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode()==38) {
+            bron.dy = 0;
+        }
+        if (e.getKeyCode()==40) {
+            bron.dy = 0;
+        }
     }
 }

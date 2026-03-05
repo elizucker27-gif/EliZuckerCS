@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.Canvas;
 import java.awt.Graphics2D;
@@ -11,7 +13,7 @@ import javax.swing.ImageIcon;
 
 
 
-    public class Basketball implements Runnable {
+    public class Basketball implements Runnable, KeyListener {
 
         final int WIDTH = 1000;
         final int HEIGHT = 700;
@@ -167,4 +169,29 @@ import javax.swing.ImageIcon;
             bufferStrategy = canvas.getBufferStrategy();
         }
 
+        @Override
+        public void keyTyped(KeyEvent e) {
+
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {
+            System.out.println(e.getKeyCode());
+            if (e.getKeyCode()==38){
+                bron.dy = -10;
+            }
+            if (e.getKeyCode()==40){
+                bron.dy =10;
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode()==38) {
+                bron.dy = 0;
+            }
+            if (e.getKeyCode()==40) {
+                bron.dy = 0;
+            }
+        }
     }
+
