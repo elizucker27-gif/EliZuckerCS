@@ -27,12 +27,14 @@ import javax.swing.ImageIcon;
         Lebron bron;
         MJ mj;
         Kareem kareem;
+        Ball ball;
 
         Image bronImage;
         Image mjImage;
         Image kareemImage;
         Image bgImage;
         Image hoopImage;
+        Image ballImage;
 
         boolean firstCrash;
         boolean newCrash;
@@ -56,6 +58,7 @@ import javax.swing.ImageIcon;
             mjImage = new ImageIcon("MJ.png").getImage();
             kareemImage = new ImageIcon("Kareem.png").getImage();
             hoopImage = new ImageIcon("hoop.png").getImage();
+            ballImage = new ImageIcon("ball.png").getImage();
 
             bgImage = new ImageIcon("Space.png").getImage();
         }
@@ -132,6 +135,7 @@ import javax.swing.ImageIcon;
             g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
             g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
             g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
+            g.drawImage(ballImage, WIDTH/2 - 40, HEIGHT/2 - 40, 80, 80, null);
 
             int hoopWidth = 120;   // ⭐ NEW
             int hoopHeight = 120;  // ⭐ NEW
@@ -171,6 +175,7 @@ import javax.swing.ImageIcon;
             canvas.createBufferStrategy(2);
             bufferStrategy = canvas.getBufferStrategy();
         }
+
 
         @Override
         public void keyTyped(KeyEvent e) {
