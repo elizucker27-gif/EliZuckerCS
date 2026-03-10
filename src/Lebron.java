@@ -22,8 +22,8 @@ public class Lebron {
         name = pName;
         xpos = pXpos;
         ypos = pYpos;
-        dx = 5;   // speed in x
-        dy = 3;   // speed in y
+        dx = 0;   // speed in x
+        dy = 0;   // speed in y
         width = 200;
         height = 200;
         isAlive = true;

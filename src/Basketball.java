@@ -48,7 +48,7 @@ import javax.swing.ImageIcon;
             firstCrash = true;
             newCrash = true;
 
-            bron = new Lebron("Lebron.png", 300, 300);
+            bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
             mj = new MJ("MJ.png", 100, 100);
             kareem = new Kareem("Kareem.png", 600, 400);
 
