@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
-public class ScreenSaverBGA implements Runnable, KeyListener {
+public class ObjectKeyboardGame implements Runnable, KeyListener {
 
     final int WIDTH = 1000;
     final int HEIGHT = 700;
@@ -21,38 +21,44 @@ public class ScreenSaverBGA implements Runnable, KeyListener {
     // Characters
     Lebron bron;
     MJ mj;
-    Kareem kareem;
 
     Image bronImage;
     Image mjImage;
-    Image kareemImage;
     Image bgImage;
 
     boolean firstCrash;
-    boolean newCrash;
+
+    // key booleans for 10/10 diagonal movement
+    boolean upPressed;
+    boolean downPressed;
+    boolean leftPressed;
+    boolean rightPressed;
+
+    boolean aPressed;
+    boolean dPressed;
 
     public static void main(String[] args) {
-        ScreenSaverBGA ex = new ScreenSaverBGA();
+        ObjectKeyboardGame ex = new ObjectKeyboardGame();
         new Thread(ex).start();
     }
 
-    public ScreenSaverBGA() {
+    public ObjectKeyboardGame() {
         setUpGraphics();
 
         firstCrash = true;
-        newCrash = true;
 
         bron = new Lebron("Lebron.png", 300, 300);
         bron.dx = 0;
         bron.dy = 0;
+
         mj = new MJ("MJ.png", 100, 100);
-        kareem = new Kareem("Kareem.png", 600, 400);
+        mj.dx = 0;
+        mj.dy = 0;
 
         bronImage = new ImageIcon("Lebron.png").getImage();
         mjImage = new ImageIcon("MJ.png").getImage();
-        kareemImage = new ImageIcon("Kareem.png").getImage();
 
-        bgImage = new ImageIcon("Space.jpeg").getImage();
+        bgImage = new ImageIcon("Space.png").getImage();
     }
 
     public void run() {
@@ -64,56 +70,58 @@ public class ScreenSaverBGA implements Runnable, KeyListener {
     }
 
     public void moveThings() {
+
+        // Lebron movement
+        bron.dx = 0;
+        bron.dy = 0;
+
+        if (leftPressed) {
+            bron.dx = -10;
+        }
+        if (rightPressed) {
+            bron.dx = 10;
+        }
+        if (upPressed) {
+            bron.dy = -10;
+        }
+        if (downPressed) {
+            bron.dy = 10;
+        }
+
+        // MJ movement
+        mj.dx = 0;
+
+        if (aPressed) {
+            mj.dx = -10;
+        }
+        if (dPressed) {
+            mj.dx = 10;
+        }
+
         bron.move();
         mj.move();
-        kareem.move();
 
         crashBronMJ();
-        crashMJKA();
     }
 
     // CRASH METHOD
-
     public void crashBronMJ() {
         if (bron.rect.intersects(mj.rect) && firstCrash) {
 
-            bron.dx = -bron.dx;
-            bron.dy = -bron.dy;
-
-            mj.dx = -mj.dx;
-            mj.dy = -mj.dy;
-
-            mj.width += 10;
-            mj.height += 10;
+            if (Math.random() < 0.5) {
+                bron.width += 10;
+                bron.height += 10;
+            } else {
+                mj.width += 10;
+                mj.height += 10;
+            }
 
             firstCrash = false;
         }
 
-
         if (!bron.rect.intersects(mj.rect)) {
             firstCrash = true;
         }
-    }
-
-    //  CRASH METHOD
-
-    public void crashMJKA() {
-        if (mj.rect.intersects(kareem.rect) && newCrash) {
-
-//            if (Math.random() < 0.5) {
-//                kareem.dx = -kareem.dx;
-//            } else {
-            kareem.dy = -kareem.dy;
-            kareem.dx = -kareem.dx;
-            mj.dx = -mj.dx;
-            mj.dy = -mj.dy;
-//            }
-        }
-        if (!mj.rect.intersects(kareem.rect)) {
-            newCrash = true;
-        }
-
-
     }
 
     private void render() {
@@ -124,7 +132,6 @@ public class ScreenSaverBGA implements Runnable, KeyListener {
 
         g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
         g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
-        g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
 
         g.dispose();
         bufferStrategy.show();
@@ -165,24 +172,52 @@ public class ScreenSaverBGA implements Runnable, KeyListener {
     public void keyTyped(KeyEvent e) {
 
     }
+
     @Override
     public void keyPressed(KeyEvent e) {
         System.out.println(e.getKeyCode());
-    if (e.getKeyCode()==38){
-        bron.dy = -10;
-    }
-    if (e.getKeyCode()==40){
-        bron.dy =10;
-    }
+
+        if (e.getKeyCode() == 38) {
+            upPressed = true;
+        }
+        if (e.getKeyCode() == 40) {
+            downPressed = true;
+        }
+        if (e.getKeyCode() == 37) {
+            leftPressed = true;
+        }
+        if (e.getKeyCode() == 39) {
+            rightPressed = true;
+        }
+
+        if (e.getKeyCode() == 65) {
+            aPressed = true;
+        }
+        if (e.getKeyCode() == 68) {
+            dPressed = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode()==38) {
-            bron.dy = 0;
+        if (e.getKeyCode() == 38) {
+            upPressed = false;
         }
-        if (e.getKeyCode()==40) {
-            bron.dy = 0;
+        if (e.getKeyCode() == 40) {
+            downPressed = false;
+        }
+        if (e.getKeyCode() == 37) {
+            leftPressed = false;
+        }
+        if (e.getKeyCode() == 39) {
+            rightPressed = false;
+        }
+
+        if (e.getKeyCode() == 65) {
+            aPressed = false;
+        }
+        if (e.getKeyCode() == 68) {
+            dPressed = false;
         }
     }
 }

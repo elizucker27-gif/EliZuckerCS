@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.Canvas;
 import java.awt.Graphics2D;
-import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
@@ -53,6 +52,10 @@ import javax.swing.ImageIcon;
             bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
             mj = new MJ("MJ.png", 100, 100);
             kareem = new Kareem("Kareem.png", 600, 400);
+            ball = new Ball("ball.png", WIDTH / 2 - 40, 100);
+
+
+
 
             bronImage = new ImageIcon("Lebron.png").getImage();
             mjImage = new ImageIcon("MJ.png").getImage();
@@ -75,6 +78,7 @@ import javax.swing.ImageIcon;
             bron.move();
             mj.move();
             kareem.move();
+            ball.move();
 
             crashBronMJ();
             crashMJKA();
@@ -135,11 +139,11 @@ import javax.swing.ImageIcon;
             g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
             g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
             g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
-            g.drawImage(ballImage, WIDTH/2 - 40, HEIGHT/2 - 40, 80, 80, null);
+            g.drawImage(ballImage, ball.xpos, ball.ypos, ball.width, ball.height, null);
 
-            int hoopWidth = 120;   // ⭐ NEW
-            int hoopHeight = 120;  // ⭐ NEW
-            g.drawImage(hoopImage, WIDTH - hoopWidth - 10, 10, hoopWidth, hoopHeight, null);
+            int hoopWidth = 120;   // NEW
+            int hoopHeight = 120;  // NEW
+            g.drawImage(hoopImage, WIDTH - hoopWidth - 10, 5, hoopWidth, hoopHeight, null);
 
             g.dispose();
             bufferStrategy.show();
