@@ -141,9 +141,9 @@ import javax.swing.ImageIcon;
             g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
             g.drawImage(ballImage, ball.xpos, ball.ypos, ball.width, ball.height, null);
 
-            int hoopWidth = 120;   // NEW
-            int hoopHeight = 120;  // NEW
-            g.drawImage(hoopImage, WIDTH - hoopWidth - 10, 5, hoopWidth, hoopHeight, null);
+            int hoopWidth = 180;   // NEW
+            int hoopHeight = 180;  // NEW
+            g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
 
             g.dispose();
             bufferStrategy.show();

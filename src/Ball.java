@@ -17,8 +17,8 @@ public class Ball {
         ypos = pYpos;
         dx = 5;
         dy = 15;
-        width = 60;
-        height = 60;
+        width = 80;
+        height = 80;
         rect = new Rectangle(xpos, ypos, width, height);
     }
 
