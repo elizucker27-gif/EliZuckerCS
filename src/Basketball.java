@@ -38,6 +38,10 @@ import javax.swing.ImageIcon;
         boolean firstCrash;
         boolean newCrash;
 
+        int score;
+        boolean scored;
+        Rectangle hoopRect;
+
         public static void main(String[] args) {
             Basketball ex = new Basketball();
             new Thread(ex).start();
@@ -48,6 +52,8 @@ import javax.swing.ImageIcon;
 
             firstCrash = true;
             newCrash = true;
+            score = 0;
+            scored = false;
 
             bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
             mj = new MJ("MJ.png", 100, 100);
@@ -82,6 +88,7 @@ import javax.swing.ImageIcon;
 
             crashBronMJ();
             crashMJKA();
+            checkScore();
         }
 
         // CRASH METHOD
@@ -128,6 +135,15 @@ import javax.swing.ImageIcon;
             }
 
 
+        }
+
+        public void checkScore(){
+
+
+
+            if (!ball.rect.intersects(hoopRect)){
+                scored + false;
+            }
         }
 
         private void render() {
