@@ -23,24 +23,24 @@ public class Ball {
     }
 
     public void move() {
-        dy += 1;   // gravity
+        dy += 1;
 
         xpos += dx;
         ypos += dy;
 
-        // floor bounce
+
         if (ypos >= 700 - height) {
             ypos = 700 - height;
-            dy = -dy / 2;   // bounce smaller each time
+            dy = -dy / 2;
         }
 
-        // left wall
+
         if (xpos <= 0) {
             xpos = 0;
             dx = -dx;
         }
 
-        // right wall
+
         if (xpos >= 1000 - width) {
             xpos = 1000 - width;
             dx = -dx;

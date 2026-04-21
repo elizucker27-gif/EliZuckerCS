@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.Canvas;
 import java.awt.Graphics2D;
@@ -12,223 +14,263 @@ import javax.swing.ImageIcon;
 
 
 
-    public class Basketball implements Runnable, KeyListener {
+public class Basketball implements Runnable, KeyListener, MouseListener {
 
-        final int WIDTH = 1000;
-        final int HEIGHT = 700;
+    final int WIDTH = 1000;
+    final int HEIGHT = 700;
 
-        public JFrame frame;
-        public Canvas canvas;
-        public JPanel panel;
-        public BufferStrategy bufferStrategy;
+    public JFrame frame;
+    public Canvas canvas;
+    public JPanel panel;
+    public BufferStrategy bufferStrategy;
 
-        // Characters
-        Lebron bron;
-        MJ mj;
-        Kareem kareem;
-        Ball ball;
 
-        Image bronImage;
-        Image mjImage;
-        Image kareemImage;
-        Image bgImage;
-        Image hoopImage;
-        Image ballImage;
+    Lebron bron;
+    MJ mj;
+    Kareem kareem;
+    Ball ball;
 
-        boolean firstCrash;
-        boolean newCrash;
+    Image bronImage;
+    Image mjImage;
+    Image kareemImage;
+    Image bgImage;
+    Image hoopImage;
+    Image ballImage;
 
-        int score;
-        boolean scored;
-        Rectangle hoopRect;
+    boolean firstCrash;
+    boolean newCrash;
 
-        public static void main(String[] args) {
-            Basketball ex = new Basketball();
-            new Thread(ex).start();
+    int score;
+    boolean scored;
+    Rectangle hoopRect;
+
+    public static void main(String[] args) {
+        Basketball ex = new Basketball();
+        new Thread(ex).start();
+    }
+
+    public Basketball() {
+        setUpGraphics();
+
+        firstCrash = true;
+        newCrash = true;
+        score = 0;
+        scored = false;
+
+        bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
+        mj = new MJ("MJ.png", 100, 100);
+        kareem = new Kareem("Kareem.png", 600, 400);
+        ball = new Ball("ball.png", WIDTH / 2 - 40, 100);
+
+
+
+
+        bronImage = new ImageIcon("Lebron.png").getImage();
+        mjImage = new ImageIcon("MJ.png").getImage();
+        kareemImage = new ImageIcon("Kareem.png").getImage();
+        hoopImage = new ImageIcon("hoop.png").getImage();
+        ballImage = new ImageIcon("ball.png").getImage();
+
+        bgImage = new ImageIcon("Space.png").getImage();
+
+        int hoopWidth = 180;
+        int hoopHeight = 180;
+        hoopRect = new Rectangle(WIDTH - hoopWidth, 100, hoopWidth, hoopHeight);
+    }
+
+    public void run() {
+        while (true) {
+            moveThings();
+            render();
+            pause(30);
+        }
+    }
+
+    public void moveThings() {
+        bron.move();
+        mj.move();
+        kareem.move();
+        ball.move();
+        ball.followPlayer(Bron);
+
+        crashBronMJ();
+        crashMJKA();
+        checkScore();
+        resetBallIfNeeded();
+    }
+
+
+
+    public void crashBronMJ() {
+        if (bron.rect.intersects(mj.rect) && firstCrash) {
+
+            bron.dx = -bron.dx;
+            bron.dy = -bron.dy;
+
+            mj.dx = -mj.dx;
+            mj.dy = -mj.dy;
+
+            mj.width += 10;
+            mj.height += 10;
+
+            firstCrash = false;
         }
 
-        public Basketball() {
-            setUpGraphics();
 
+        if (!bron.rect.intersects(mj.rect)) {
             firstCrash = true;
-            newCrash = true;
-            score = 0;
-            scored = false;
-
-            bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
-            mj = new MJ("MJ.png", 100, 100);
-            kareem = new Kareem("Kareem.png", 600, 400);
-            ball = new Ball("ball.png", WIDTH / 2 - 40, 100);
-
-
-
-
-            bronImage = new ImageIcon("Lebron.png").getImage();
-            mjImage = new ImageIcon("MJ.png").getImage();
-            kareemImage = new ImageIcon("Kareem.png").getImage();
-            hoopImage = new ImageIcon("hoop.png").getImage();
-            ballImage = new ImageIcon("ball.png").getImage();
-
-            bgImage = new ImageIcon("Space.png").getImage();
         }
+    }
 
-        public void run() {
-            while (true) {
-                moveThings();
-                render();
-                pause(30);
-            }
-        }
-
-        public void moveThings() {
-            bron.move();
-            mj.move();
-            kareem.move();
-            ball.move();
-
-            crashBronMJ();
-            crashMJKA();
-            checkScore();
-        }
-
-        // CRASH METHOD
-
-        public void crashBronMJ() {
-            if (bron.rect.intersects(mj.rect) && firstCrash) {
-
-                bron.dx = -bron.dx;
-                bron.dy = -bron.dy;
-
-                mj.dx = -mj.dx;
-                mj.dy = -mj.dy;
-
-                mj.width += 10;
-                mj.height += 10;
-
-                firstCrash = false;
-            }
-
-
-            if (!bron.rect.intersects(mj.rect)) {
-                firstCrash = true;
-            }
-        }
-
-        //  CRASH METHOD
-
-        public void crashMJKA() {
-            if (mj.rect.intersects(kareem.rect) && newCrash) {
+    public void crashMJKA() {
+        if (mj.rect.intersects(kareem.rect) && newCrash) {
 
 //            if (Math.random() < 0.5) {
 //                kareem.dx = -kareem.dx;
 //            } else {
-                kareem.dy = -kareem.dy;
-                kareem.dx = -kareem.dx;
-                mj.dx = -mj.dx;
-                mj.dy = -mj.dy;
+            kareem.dy = -kareem.dy;
+            kareem.dx = -kareem.dx;
+            mj.dx = -mj.dx;
+            mj.dy = -mj.dy;
 
-                newCrash = false;
+            newCrash = false;
 //            }
-            }
-            if (!mj.rect.intersects(kareem.rect)) {
-                newCrash = true;
-            }
-
-
         }
-
-        public void checkScore(){
-
-
-
-            if (!ball.rect.intersects(hoopRect)){
-                scored + false;
-            }
-        }
-
-        private void render() {
-            Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
-            g.clearRect(0, 0, WIDTH, HEIGHT);
-
-            g.drawImage(bgImage, 0, 0, WIDTH, HEIGHT, null);
-
-            g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
-            g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
-            g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
-            g.drawImage(ballImage, ball.xpos, ball.ypos, ball.width, ball.height, null);
-
-            int hoopWidth = 180;   // NEW
-            int hoopHeight = 180;  // NEW
-            g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
-
-            g.dispose();
-            bufferStrategy.show();
-        }
-
-        public void pause(int time) {
-            try {
-                Thread.sleep(time);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void setUpGraphics() {
-            frame = new JFrame("Basketball Screensaver");
-            panel = (JPanel) frame.getContentPane();
-            panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            panel.setLayout(null);
-
-            canvas = new Canvas();
-            canvas.setBounds(0, 0, WIDTH, HEIGHT);
-            canvas.setIgnoreRepaint(true);
-            canvas.addKeyListener(this);
-            canvas.setFocusable(true);
-            canvas.requestFocus();
-            panel.add(canvas);
-
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setResizable(false);
-            frame.setVisible(true);
-
-            canvas.createBufferStrategy(2);
-            bufferStrategy = canvas.getBufferStrategy();
+        if (!mj.rect.intersects(kareem.rect)) {
+            newCrash = true;
         }
 
 
-        @Override
-        public void keyTyped(KeyEvent e) {
+    }
+
+    public void checkScore(){
+
+        if (ball.rect.intersects(hoopRect) && !scored) {
+            score++;
+            scored = true;
+            System.out.println("Score: " + score);
+            ball.reset(bron);
+        }
+        if (!ball.rect.intersects(hoopRect)){
+            scored = false;
+
 
         }
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            System.out.println(e.getKeyCode());
-            if (e.getKeyCode() == 38) {
-                bron.dy = -10;
-            }
-            if (e.getKeyCode() == 40) {
-                bron.dy = 10;
-            }
-            if (e.getKeyCode() == 37) {
-                bron.dx = -10;
-            }
-            if (e.getKeyCode() == 39) {
-                bron.dx = 10;
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            if (e.getKeyCode() == 38 || e.getKeyCode() == 40) {
-                bron.dy = 0;
-            }
-
-            if (e.getKeyCode() == 37 || e.getKeyCode() == 39) {
-                bron.dx = 0;
-            }
+    }
+    public void resetBallIfNeeded() {
+        if (ball.ypos > HEIGHT || ball.xpos < 0 || ball.xpos > WIDTH) {
+            ball.reset(bron);
         }
     }
 
+    private void render() {
+        Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
+        g.clearRect(0, 0, WIDTH, HEIGHT);
 
+        g.drawImage(bgImage, 0, 0, WIDTH, HEIGHT, null);
+
+        g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
+        g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
+        g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
+        g.drawImage(ballImage, ball.xpos, ball.ypos, ball.width, ball.height, null);
+
+        int hoopWidth = 180;
+        int hoopHeight = 180;
+
+        g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
+        g.setColor(new Color(255,255,255));
+        g.drawString("Score: " + score, 40, 50);
+        g.dispose();
+        bufferStrategy.show();
+    }
+
+    public void pause(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUpGraphics() {
+        frame = new JFrame("Basketball Screensaver");
+        panel = (JPanel) frame.getContentPane();
+        panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        panel.setLayout(null);
+
+        canvas = new Canvas();
+        canvas.setBounds(0, 0, WIDTH, HEIGHT);
+        canvas.setIgnoreRepaint(true);
+        canvas.addKeyListener(this);
+        canvas.setFocusable(true);
+        canvas.requestFocus();
+        panel.add(canvas);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+        canvas.createBufferStrategy(2);
+        bufferStrategy = canvas.getBufferStrategy();
+    }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println(e.getKeyCode());
+        if (e.getKeyCode() == 38) {
+            bron.dy = -10;
+        }
+        if (e.getKeyCode() == 40) {
+            bron.dy = 10;
+        }
+        if (e.getKeyCode() == 37) {
+            bron.dx = -10;
+        }
+        if (e.getKeyCode() == 39) {
+            bron.dx = 10;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == 38 || e.getKeyCode() == 40) {
+            bron.dy = 0;
+        }
+
+        if (e.getKeyCode() == 37 || e.getKeyCode() == 39) {
+            bron.dx = 0;
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        ball.shoot(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+e.
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+}
