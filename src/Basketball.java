@@ -91,7 +91,7 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         mj.move();
         kareem.move();
         ball.move();
-        ball.followPlayer(Bron);
+        ball.followPlayer(bron);
 
         crashBronMJ();
         crashMJKA();
@@ -149,7 +149,7 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
             score++;
             scored = true;
             System.out.println("Score: " + score);
-            ball.reset(bron);
+          //  ball.reset(bron);
         }
         if (!ball.rect.intersects(hoopRect)){
             scored = false;
@@ -159,7 +159,7 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
     }
     public void resetBallIfNeeded() {
         if (ball.ypos > HEIGHT || ball.xpos < 0 || ball.xpos > WIDTH) {
-            ball.reset(bron);
+           // ball.reset(bron);
         }
     }
 
@@ -179,7 +179,9 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
         g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
         g.setColor(new Color(255,255,255));
-        g.drawString("Score: " + score, 40, 50);
+        g.setFont(new Font("Arial", Font.BOLD, 60));
+        g.drawString("Score: " + score, 400, 50);
+
         g.dispose();
         bufferStrategy.show();
     }
@@ -256,12 +258,12 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        ball.shoot(e.getX(), e.getY());
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-e.
+
     }
 
     @Override
