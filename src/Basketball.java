@@ -39,10 +39,13 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
     boolean firstCrash;
     boolean newCrash;
-
+    boolean shot;
     int score;
     boolean scored;
     Rectangle hoopRect;
+    Rectangle frontRim;
+    Rectangle backRim;
+
 
     public static void main(String[] args) {
         Basketball ex = new Basketball();
@@ -55,19 +58,21 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         firstCrash = true;
         newCrash = true;
         score = 0;
+        shot = false;
         scored = false;
 
+
         bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
-        mj = new MJ("MJ.png", 100, 100);
-        kareem = new Kareem("Kareem.png", 600, 400);
+        //mj = new MJ("MJ.png", 100, 100);
+        //kareem = new Kareem("Kareem.png", 600, 400);
         ball = new Ball("ball.png", WIDTH / 2 - 40, 100);
 
 
 
 
         bronImage = new ImageIcon("Lebron.png").getImage();
-        mjImage = new ImageIcon("MJ.png").getImage();
-        kareemImage = new ImageIcon("Kareem.png").getImage();
+        //mjImage = new ImageIcon("MJ.png").getImage();
+        //kareemImage = new ImageIcon("Kareem.png").getImage();
         hoopImage = new ImageIcon("hoop.png").getImage();
         ballImage = new ImageIcon("ball.png").getImage();
 
@@ -75,7 +80,10 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
         int hoopWidth = 180;
         int hoopHeight = 180;
-        hoopRect = new Rectangle(WIDTH - hoopWidth, 100, hoopWidth, hoopHeight);
+        hoopRect = new Rectangle(WIDTH - 115, 205, 70,15);
+        frontRim = new Rectangle(831, 140, 1, 10);
+        backRim = new Rectangle(927, 140, 1, 10);
+
     }
 
     public void run() {
@@ -88,78 +96,95 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
     public void moveThings() {
         bron.move();
-        mj.move();
-        kareem.move();
-        ball.move();
-        ball.followPlayer(bron);
+//        mj.move();
+//        kareem.move();
+        if (!shot) {
+            ball.followPlayer(bron);
+        } else {
+            ball.move();
+        }
 
-        crashBronMJ();
-        crashMJKA();
+//    crashBronMJ();
+//    crashMJKA();
+        checkRim();
         checkScore();
         resetBallIfNeeded();
     }
 
 
 
-    public void crashBronMJ() {
-        if (bron.rect.intersects(mj.rect) && firstCrash) {
-
-            bron.dx = -bron.dx;
-            bron.dy = -bron.dy;
-
-            mj.dx = -mj.dx;
-            mj.dy = -mj.dy;
-
-            mj.width += 10;
-            mj.height += 10;
-
-            firstCrash = false;
-        }
 
 
-        if (!bron.rect.intersects(mj.rect)) {
-            firstCrash = true;
-        }
+//    public void crashBronMJ() {
+//        if (bron.rect.intersects(mj.rect) && firstCrash) {
+//
+//            bron.dx = -bron.dx;
+//            bron.dy = -bron.dy;
+//
+//            mj.dx = -mj.dx;
+//            mj.dy = -mj.dy;
+//
+//            mj.width += 10;
+//            mj.height += 10;
+//
+//            firstCrash = false;
+//        }
+//
+//
+//        if (!bron.rect.intersects(mj.rect)) {
+//            firstCrash = true;
+//        }
+//    }
+//
+//    public void crashMJKA() {
+//        if (mj.rect.intersects(kareem.rect) && newCrash) {
+//
+////            if (Math.random() < 0.5) {
+////                kareem.dx = -kareem.dx;
+////            } else {
+//            kareem.dy = -kareem.dy;
+//            kareem.dx = -kareem.dx;
+//            mj.dx = -mj.dx;
+//            mj.dy = -mj.dy;
+//
+//            newCrash = false;
+////            }
+//        }
+//        if (!mj.rect.intersects(kareem.rect)) {
+//            newCrash = true;
+//        }
+//
+//
+//    }
+
+public void checkScore() {
+
+    if (ball.rect.intersects(hoopRect) && !scored) {
+        score++;
+        scored = true;
+        shot = false;
+
+        System.out.println("Score: " + score);
+
+        ball.followPlayer(bron);
     }
+}
 
-    public void crashMJKA() {
-        if (mj.rect.intersects(kareem.rect) && newCrash) {
-
-//            if (Math.random() < 0.5) {
-//                kareem.dx = -kareem.dx;
-//            } else {
-            kareem.dy = -kareem.dy;
-            kareem.dx = -kareem.dx;
-            mj.dx = -mj.dx;
-            mj.dy = -mj.dy;
-
-            newCrash = false;
-//            }
-        }
-        if (!mj.rect.intersects(kareem.rect)) {
-            newCrash = true;
-        }
-
-
+public void checkRim(){
+    if(ball.rect.intersects(frontRim)){
+        ball.dx = -ball.dx / 2;
+        ball.dy = -8;
     }
-
-    public void checkScore(){
-
-        if (ball.rect.intersects(hoopRect) && !scored) {
-            score++;
-            scored = true;
-            System.out.println("Score: " + score);
-          //  ball.reset(bron);
-        }
-        if (!ball.rect.intersects(hoopRect)){
-            scored = false;
-
-
-        }
+    if (ball.rect.intersects(backRim)) {
+        ball.dx = -ball.dx / 2;
+        ball.dy = -8;
     }
+}
     public void resetBallIfNeeded() {
         if (ball.ypos > HEIGHT || ball.xpos < 0 || ball.xpos > WIDTH) {
-           // ball.reset(bron);
+            shot = false;
+            scored = false;
+            ball.followPlayer(bron);
         }
     }
 
@@ -170,15 +195,15 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         g.drawImage(bgImage, 0, 0, WIDTH, HEIGHT, null);
 
         g.drawImage(bronImage, bron.xpos, bron.ypos, bron.width, bron.height, null);
-        g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
-        g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
+        //g.drawImage(mjImage, mj.xpos, mj.ypos, mj.width, mj.height, null);
+        //g.drawImage(kareemImage, kareem.xpos, kareem.ypos, kareem.width, kareem.height, null);
         g.drawImage(ballImage, ball.xpos, ball.ypos, ball.width, ball.height, null);
 
         int hoopWidth = 180;
         int hoopHeight = 180;
 
         g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
-        g.setColor(new Color(255,255,255));
+        g.setColor(new Color(255,255,255, 255));
         g.setFont(new Font("Arial", Font.BOLD, 60));
         g.drawString("Score: " + score, 400, 50);
 
@@ -204,6 +229,7 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         canvas.setBounds(0, 0, WIDTH, HEIGHT);
         canvas.setIgnoreRepaint(true);
         canvas.addKeyListener(this);
+        canvas.addMouseListener(this);
         canvas.setFocusable(true);
         canvas.requestFocus();
         panel.add(canvas);
@@ -238,6 +264,20 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         if (e.getKeyCode() == 39) {
             bron.dx = 10;
         }
+        if (e.getKeyCode() == 32 && !shot) {
+            shot = true;
+            scored = false;
+
+            ball.xpos = bron.xpos + bron.width - 20;
+            ball.ypos = bron.ypos + 20;
+
+            ball.dx = 16;
+            ball.dy = -24;
+        }
+
+
+
+
     }
 
     @Override
@@ -258,7 +298,10 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
 
+        System.out.println("X: " + x + "  Y: " + y);
     }
 
     @Override

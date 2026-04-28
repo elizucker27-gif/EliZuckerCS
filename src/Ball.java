@@ -25,23 +25,20 @@ public class Ball {
     }
 
     public void move() {
-        if (isShot) {
-            xpos += (int) dx;
-            ypos += (int) dy;
-            dy += 0.6;
-        }
+        xpos += dx;
+        ypos += dy;
 
+        dy += 1;
 
         rect = new Rectangle(xpos, ypos, width, height);
     }
 
+
     public void followPlayer(Lebron bron) {
-        if (!isShot) {
-            xpos = bron.xpos + bron.width - 10;
-            ypos = bron.ypos + bron.height / 2;
-            rect = new Rectangle(xpos, ypos, width, height);
-        }
-
-
+        xpos = bron.xpos + bron.width - 30;
+        ypos = bron.ypos + 20;
+        dx = 0;
+        dy = 0;
+        rect = new Rectangle(xpos, ypos, width, height);
     }
 }

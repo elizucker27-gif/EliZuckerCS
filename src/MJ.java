@@ -2,7 +2,7 @@ import java.awt.*;
 
 public class MJ {
 
-    // Variables
+
     public String name;
     public int xpos;
     public int ypos;
@@ -13,7 +13,7 @@ public class MJ {
     public boolean isAlive;
     public Rectangle rect;
 
-    // Constructor
+
     public MJ(String pName, int pXpos, int pYpos) {
         name = pName;
         xpos = pXpos;
@@ -26,7 +26,6 @@ public class MJ {
         rect = new Rectangle(xpos, ypos, width, height);
     }
 
-    // Move MJ
     public void move() {
         xpos += dx;
         ypos += dy;
