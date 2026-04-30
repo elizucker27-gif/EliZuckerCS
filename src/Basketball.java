@@ -42,6 +42,8 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
     boolean shot;
     int score;
     boolean scored;
+    boolean chargingShot;
+    int shotPower;
     Rectangle hoopRect;
     Rectangle frontRim;
     Rectangle backRim;
@@ -60,6 +62,8 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         score = 0;
         shot = false;
         scored = false;
+        chargingShot = false;
+        shotPower = 0;
 
 
         bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
@@ -81,8 +85,8 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         int hoopWidth = 180;
         int hoopHeight = 180;
         hoopRect = new Rectangle(WIDTH - 115, 205, 70,15);
-        frontRim = new Rectangle(831, 140, 1, 10);
-        backRim = new Rectangle(927, 140, 1, 10);
+        frontRim = new Rectangle(831, 153, 1, 10);
+        backRim = new Rectangle(927, 153, 1, 10);
 
     }
 
@@ -102,6 +106,13 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
             ball.followPlayer(bron);
         } else {
             ball.move();
+        }
+        if (chargingShot && !shot) {
+            shotPower++;
+
+            if (shotPower > 35) {
+                shotPower = 35;
+            }
         }
 
 //    crashBronMJ();
@@ -264,15 +275,9 @@ public void checkRim(){
         if (e.getKeyCode() == 39) {
             bron.dx = 10;
         }
-        if (e.getKeyCode() == 32 && !shot) {
-            shot = true;
-            scored = false;
-
-            ball.xpos = bron.xpos + bron.width - 20;
-            ball.ypos = bron.ypos + 20;
-
-            ball.dx = 16;
-            ball.dy = -24;
+        if (e.getKeyCode() == 32 && !shot && !chargingShot) {
+            chargingShot = true;
+            shotPower = 0;
         }
 
 
@@ -288,6 +293,18 @@ public void checkRim(){
 
         if (e.getKeyCode() == 37 || e.getKeyCode() == 39) {
             bron.dx = 0;
+        }
+        if(e.getKeyCode()==32&& chargingShot&&!shot){
+            chargingShot=false;
+            shot=true;
+            scored=false;
+
+            ball.xpos = bron.xpos +bron.width -20;
+            ball.ypos = ball.ypos +2;
+
+            ball.dx =10 +shotPower/3;
+            ball.dy = -12 -shotPower / 2;
+
         }
     }
 
