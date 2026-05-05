@@ -47,6 +47,11 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
     Rectangle hoopRect;
     Rectangle frontRim;
     Rectangle backRim;
+    boolean rimHit;
+    int rimFlashTimer;
+    int rimCooldown;
+    Rectangle rimSwish;
+
 
 
     public static void main(String[] args) {
@@ -64,6 +69,9 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
         scored = false;
         chargingShot = false;
         shotPower = 0;
+        rimHit = false;
+        rimFlashTimer = 0;
+        rimCooldown = 0;
 
 
         bron = new Lebron("Lebron.png", 0, HEIGHT - 120);
@@ -84,9 +92,10 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
         int hoopWidth = 180;
         int hoopHeight = 180;
-        hoopRect = new Rectangle(WIDTH - 115, 205, 70,15);
-        frontRim = new Rectangle(831, 153, 1, 10);
-        backRim = new Rectangle(927, 153, 1, 10);
+        hoopRect = new Rectangle(850, 205, 80,15);
+        frontRim = new Rectangle(827, 153, 1, 1);
+        backRim = new Rectangle(924, 153, 1, 1);
+        rimSwish = new Rectangle(860, 150, 30, 20);
 
     }
 
@@ -117,6 +126,7 @@ public class Basketball implements Runnable, KeyListener, MouseListener {
 
 //    crashBronMJ();
 //    crashMJKA();
+        checkSwish();
         checkRim();
         checkScore();
         resetBallIfNeeded();
@@ -181,16 +191,55 @@ public void checkScore() {
     }
 }
 
-public void checkRim(){
-    if(ball.rect.intersects(frontRim)){
-        ball.dx = -ball.dx / 2;
-        ball.dy = -8;
+    public void checkRim() {
+
+        if (rimCooldown > 0) {
+            rimCooldown--;
+        }
+
+        if ((ball.rect.intersects(frontRim) || ball.rect.intersects(backRim))
+                && rimCooldown == 0
+                && ball.dy > 0) {
+
+            double randomBounce = Math.random();
+
+            if (ball.rect.intersects(frontRim)) {
+                ball.dx = -4 - (int)(randomBounce * 4);
+            }
+
+            if (ball.rect.intersects(backRim)) {
+                ball.dx = 4 + (int)(randomBounce * 4);
+            }
+
+            ball.dy = -6;
+
+
+            ball.xpos += ball.dx * 2;
+            ball.ypos -= 8;
+            ball.rect.setLocation(ball.xpos, ball.ypos);
+
+            rimHit = true;
+            rimFlashTimer = 10;
+            rimCooldown = 12;
+        }
+
+        if (rimFlashTimer > 0) {
+            rimFlashTimer--;
+        } else {
+            rimHit = false;
+        }
     }
-    if (ball.rect.intersects(backRim)) {
-        ball.dx = -ball.dx / 2;
-        ball.dy = -8;
+
+
+    public void checkSwish() {
+        if (ball.rect.intersects(rimSwish) && ball.dy > 0) {
+
+            ball.dx = 0;
+            ball.dy = 6;
+
+            rimCooldown = 10;
+        }
     }
-}
     public void resetBallIfNeeded() {
         if (ball.ypos > HEIGHT || ball.xpos < 0 || ball.xpos > WIDTH) {
             shot = false;
@@ -214,10 +263,21 @@ public void checkRim(){
         int hoopHeight = 180;
 
         g.drawImage(hoopImage, WIDTH - hoopWidth , 100, hoopWidth, hoopHeight, null);
+        if (rimHit) {
+            g.setColor(Color.RED);
+            g.fillRect(frontRim.x, frontRim.y, 10, 20);
+            g.fillRect(backRim.x, backRim.y, 10, 20);
+        }
+        g.setColor(Color.BLUE);
+        g.drawRect(rimSwish.x, rimSwish.y, rimSwish.width, rimSwish.height);
+
         g.setColor(new Color(255,255,255, 255));
         g.setFont(new Font("Arial", Font.BOLD, 60));
         g.drawString("Score: " + score, 400, 50);
 
+        g.setFont(new Font("Arial", Font.BOLD, 15));
+        g.setColor(Color.WHITE);
+        g.drawString("Space bar to shoot  Click to reset", 20, 30);
         g.dispose();
         bufferStrategy.show();
     }
@@ -315,10 +375,20 @@ public void checkRim(){
 
     @Override
     public void mousePressed(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
+        score = 0;
+        shot = false;
+        scored = false;
+        chargingShot = false;
+        shotPower = 0;
 
-        System.out.println("X: " + x + "  Y: " + y);
+        bron.xpos = 0;
+        bron.ypos = HEIGHT - 120;
+        bron.dx = 0;
+        bron.dy = 0;
+
+        ball.followPlayer(bron);
+
+        System.out.println("Game reset");
     }
 
     @Override
